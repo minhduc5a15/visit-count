@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "allowJs": true,
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "incremental": true,
+        "strict": true,
+        "skipLibCheck": false,
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["./*"]
+        },
+        "typeRoots": ["./node_modules/@types"]
+    },
+    "include": ["./api/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}
