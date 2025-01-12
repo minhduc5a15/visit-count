@@ -1,16 +1,18 @@
-// firebaseConfig.js
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set } from 'firebase/database';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyDF78n24MUOCGaceF_abT44fwWJyENQvFw',
-    authDomain: 'visit-count-c90a2.firebaseapp.com',
-    projectId: 'visit-count-c90a2',
-    storageBucket: 'visit-count-c90a2.appspot.com',
-    messagingSenderId: '869998155105',
-    databaseURL: 'visit-count-c90a2-default-rtdb.asia-southeast1.firebasedatabase.app',
-    appId: '1:869998155105:web:57f93cbf4797c23fd4a120',
-    measurementId: 'G-8M0EJL5VZR',
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
