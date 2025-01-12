@@ -25,7 +25,6 @@ app.get('/api/visit', async (req, res) => {
         const svg = `
       <svg width="280" height="80" viewBox="0 0 280 80" style="filter: drop-shadow(0 2px 2px rgb(255 255 255 / 0.1))">
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Poppins:wght@400;600&display=swap');
                 * {
                     font-family: 'Poppins', sans-serif;
                 }
@@ -103,7 +102,7 @@ app.get('/api/visit', async (req, res) => {
                 y="16"
                 width="48"
                 height="48"
-                href="https://www.gravatar.com/avatar/30e0e9c342d684fc5743fc2c3c735c45?d=identicon&s=135"
+                href="https://www.gravatar.com/avatar/30e0e9c342d684fc5743fc2c3c735c45?d=identicon&amp;s=135"
                 clip-path="url(#avatarClip)"
             />
         </svg>`;
