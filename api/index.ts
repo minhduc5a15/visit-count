@@ -8,7 +8,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: '*', 
+        origin: '*',
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type'],
     }),
@@ -16,11 +16,11 @@ app.use(
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/', (_, res) => {
+    res.redirect('https://github.com/minhduc5a15/visit-count');
 });
 
-app.get('/api/visit', async (req, res) => {
+app.get('/api/visit', async (_, res) => {
     try {
         const visitRef = ref(db, 'visit_count');
         const snapshot = await get(visitRef);
@@ -31,7 +31,6 @@ app.get('/api/visit', async (req, res) => {
 
         const response = await axiosInstance.get('/api/code/fba61808');
 
-        console.log('Response:', response.data);
         res.setHeader('Content-Type', 'image/svg+xml');
         res.setHeader('X-Content-Type-Options', 'nosniff');
         res.send(response.data.content.replace('{count}', formatNumber(count)));
