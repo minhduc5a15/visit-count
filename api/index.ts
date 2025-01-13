@@ -6,7 +6,13 @@ import { axiosInstance } from '../src/utils/axios';
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: '*', 
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type'],
+    }),
+);
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -27,6 +33,7 @@ app.get('/api/visit', async (req, res) => {
 
         console.log('Response:', response.data);
         res.setHeader('Content-Type', 'image/svg+xml');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
         res.send(response.data.content.replace('{count}', formatNumber(count)));
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
