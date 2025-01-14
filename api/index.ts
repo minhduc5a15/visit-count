@@ -31,7 +31,7 @@ app.get('/api/visit', async (req, res) => {
         count += 1;
         await set(visitRef, count);
 
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const ip = ((typeof req.headers['x-forwarded-for'] === 'string' ? req.headers['x-forwarded-for'] : req.connection.remoteAddress) || 'unknown').replace(/\./g, '_');
         const referer = req.headers['referer'] || req.headers['origin'] || 'unknown';
 
         const timestamp = Date.now();
