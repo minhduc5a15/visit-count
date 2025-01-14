@@ -3,6 +3,7 @@ import { db, ref, get, set } from '../src/utils/firebase';
 import cors from 'cors';
 import { formatNumber } from '../src/utils/format-number';
 import { axiosInstance } from '../src/utils/axios';
+import crypto from 'crypto';
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.get('/', (_, res) => {
     res.redirect('https://github.com/minhduc5a15/visit-count');
 });
 
-app.get('/api/visit', async (_, res) => {
+
+app.get('/api/visit', async (req, res) => {
     try {
         const visitRef = ref(db, 'visit_count');
         const snapshot = await get(visitRef);
@@ -28,6 +30,15 @@ app.get('/api/visit', async (_, res) => {
 
         count += 1;
         await set(visitRef, count);
+
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const referer = req.headers['referer'] || req.headers['origin'] || 'unknown';
+
+        const timestamp = Date.now();
+        const uniqueKey = `${ip}-${timestamp}-${crypto.randomBytes(4).toString('hex')}`;
+
+        const ipRef = ref(db, `visitor_ips/${uniqueKey}`);
+        await set(ipRef, { ip, timestamp: new Date(timestamp).toISOString(), referer });
 
         const response = await axiosInstance.get('/api/code/fba61808');
 
@@ -39,6 +50,7 @@ app.get('/api/visit', async (_, res) => {
         res.status(500).send('Error: ' + errorMessage);
     }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
