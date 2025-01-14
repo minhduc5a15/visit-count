@@ -13,7 +13,7 @@ const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
     max: 100,
     message: 'Too many requests, please try again later.',
-}) 
+});
 
 app.use(limiter);
 app.use(
@@ -34,7 +34,7 @@ app.get('/', (_, res) => {
 app.get('/api/visit', async (req, res) => {
     const visitCountColl = await getCollecion('visit-count');
     await visitCountColl.updateOne({ type: 'visit_count' }, { $inc: { visit_count: 1 } }, { upsert: true });
-    
+
     const visitorIpsColl = await getCollecion('visitor-ips');
     const ip = (
         (typeof req.headers['x-forwarded-for'] === 'string'
@@ -47,13 +47,20 @@ app.get('/api/visit', async (req, res) => {
     const uniqueKey = `${ip}-${timestamp}-${crypto.randomBytes(4).toString('hex')}`;
 
     const visitCountDoc = await visitCountColl.findOne({ type: 'visit_count' });
-    await visitorIpsColl.insertOne({ key: uniqueKey, ip, timestamp: new Date(timestamp).toISOString(), referer , current_visit: visitCountDoc ? visitCountDoc['visit_count'] : 0 });
+    await visitorIpsColl.insertOne({
+        key: uniqueKey,
+        ip,
+        timestamp: new Date(timestamp).toISOString(),
+        referer,
+        current_visit: visitCountDoc ? visitCountDoc['visit_count'] : 0,
+    });
 
     const response = await axiosInstance.get('/api/code/fba61808');
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    return res.send(response.data.content.replace('{count}', formatNumber(visitCountDoc ? visitCountDoc['visit_count'] : 0)));
+    // return res.send(response.data.content.replace('{count}', formatNumber(visitCountDoc ? visitCountDoc['visit_count'] : 0)));
+    return res.redirect('https://github.com/minhduc5a15/visit-count');
 });
 
 const PORT = process.env.PORT || 3000;
