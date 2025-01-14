@@ -47,21 +47,23 @@ app.get('/api/visit', async (req, res) => {
     const uniqueKey = `${ip}-${timestamp}-${crypto.randomBytes(4).toString('hex')}`;
 
     const visitCountDoc = await visitCountColl.findOne({ type: 'visit_count' });
+    const count = visitCountDoc ? visitCountDoc['visit_count'] : 0;
     await visitorIpsColl.insertOne({
         key: uniqueKey,
         ip,
         timestamp: new Date(timestamp).toISOString(),
         referer,
-        current_visit: visitCountDoc ? visitCountDoc['visit_count'] : 0,
+        current_visit: count,
     });
 
     const response = await axiosInstance.get('/api/code/fba61808');
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    return res.send(
-        response.data.content.replace('{count}', formatNumber(visitCountDoc ? visitCountDoc['visit_count'] : 0)),
-    );
+
+    const formattedContent = response.data.content.replace('{count}', formatNumber(count)).replace('{count}', count);
+
+    res.send(formattedContent);
 });
 
 const PORT = process.env.PORT || 3000;
